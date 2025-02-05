@@ -10,7 +10,8 @@ import (
 
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		templ.Hello().Render(context.Background(), w)
+		body := templ.Hello()
+		templ.Layout("Home", body).Render(context.Background(), w)
 	})
 
 	log.Println("Listening on port http://localhost:3000")
