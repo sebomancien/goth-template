@@ -1,10 +1,16 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/sebomancien/goth-template/internal/templ"
+)
+
+const (
+	DEFAULT_HTTP_PORT = "3000"
 )
 
 func main() {
@@ -14,8 +20,13 @@ func main() {
 	mux.HandleFunc("/", homeHandler)
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 
-	log.Println("Listening on port http://localhost:3000")
-	err := http.ListenAndServe(":3000", mux)
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = DEFAULT_HTTP_PORT
+	}
+
+	log.Printf("Listening on port http://localhost:%s", port)
+	err := http.ListenAndServe(fmt.Sprintf(":%s", port), mux)
 	if err != nil {
 		log.Fatal(err)
 	}
