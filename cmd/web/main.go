@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/sebomancien/goth-template/internal/middleware"
 	"github.com/sebomancien/goth-template/internal/templ"
 )
 
@@ -17,7 +18,7 @@ func main() {
 	fs := http.FileServer(http.Dir("internal/static"))
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", homeHandler)
+	mux.HandleFunc("/", middleware.Middlewares(homeHandler))
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 
 	port := os.Getenv("PORT")
