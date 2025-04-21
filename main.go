@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	"fmt"
 	"log"
 	"net/http"
@@ -14,14 +15,15 @@ const (
 	DEFAULT_HTTP_PORT = "3000"
 )
 
-func main() {
-	fs := http.FileServer(http.Dir("internal/static"))
+//go:embed static/*
+var staticFS embed.FS
 
+func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", middleware.Middlewares(homeHandler))
-	mux.Handle("/static/", http.StripPrefix("/static/", fs))
+	mux.Handle("/static/", http.FileServer(http.FS(staticFS)))
 
-	port := os.Getenv("PORT")
+	port := os.Getenv("HTTP_PORT")
 	if port == "" {
 		port = DEFAULT_HTTP_PORT
 	}
