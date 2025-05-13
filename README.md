@@ -17,7 +17,7 @@ templ generate
 Download the project dependencies and run the web application.
 ```
 go mod download
-go run ./cmd/web/main.go
+go run .
 ```
 
 # License
