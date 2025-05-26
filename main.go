@@ -4,6 +4,7 @@ import (
 	"embed"
 	"log"
 
+	"github.com/sebomancien/goth-template/config"
 	"github.com/sebomancien/goth-template/internal/server"
 )
 
@@ -11,12 +12,12 @@ import (
 var staticFS embed.FS
 
 func main() {
-	cfg := server.Config{
-		Host: "localhost",
-		Port: 3000,
+	cfg, err := config.Load()
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	err := server.Run(&cfg, staticFS)
+	err = server.Run(&cfg.Server, staticFS)
 	if err != nil {
 		log.Fatal(err)
 	}
