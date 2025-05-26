@@ -3,11 +3,13 @@ package sqlite
 import (
 	"database/sql"
 	"io/fs"
+	"time"
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/sqlite3"
 	"github.com/golang-migrate/migrate/v4/source/iofs"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/sebomancien/goth-template/internal/models"
 )
 
 type Database struct {
@@ -56,4 +58,33 @@ func runMigration(db *sql.DB, migration fs.FS) error {
 
 func (d *Database) Close() {
 	d.db.Close()
+}
+
+func (d *Database) AddLog(level models.LogLevel, message string) error {
+	_, err := d.db.Exec("INSERT INTO logs (timestamp, level, message) VALUES (?, ?, ?)", time.Now(), level, message)
+	return err
+}
+
+func (d *Database) GetLogs() ([]models.Log, error) {
+	rows, err := d.db.Query(`SELECT timestamp, level, message FROM logs`)
+	if err != nil {
+		return nil, err
+	}
+
+	var logs []models.Log
+	for rows.Next() {
+		var log models.Log
+		err := rows.Scan(&log.Timestamp, &log.Level, &log.Message)
+		if err != nil {
+			return nil, err
+		}
+		logs = append(logs, log)
+	}
+
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+
+	return logs, nil
 }

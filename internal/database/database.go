@@ -5,6 +5,7 @@ import (
 	"io/fs"
 
 	"github.com/sebomancien/goth-template/internal/database/sqlite"
+	"github.com/sebomancien/goth-template/internal/models"
 )
 
 type Type int
@@ -20,6 +21,8 @@ type Config struct {
 
 type Database interface {
 	Close()
+	AddLog(level models.LogLevel, message string) error
+	GetLogs() ([]models.Log, error)
 }
 
 func Open(config *Config, migration fs.FS) (Database, error) {
