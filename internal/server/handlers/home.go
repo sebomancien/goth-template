@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/sebomancien/goth-template/internal/templ"
+	"github.com/sebomancien/goth-template/internal/server/templ"
 )
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {

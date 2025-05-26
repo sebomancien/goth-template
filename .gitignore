@@ -29,3 +29,6 @@ go.work.sum
 
 # Air files
 /tmp
+
+# Data folder used with Docker Compose
+/data
